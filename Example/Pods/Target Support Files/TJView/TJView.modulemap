@@ -1,0 +1,6 @@
+framework module TJView {
+  umbrella header "TJView-umbrella.h"
+
+  export *
+  module * { export * }
+}

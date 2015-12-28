@@ -1,0 +1,14 @@
+PODS:
+  - TJView (0.1.0)
+
+DEPENDENCIES:
+  - TJView (from `../`)
+
+EXTERNAL SOURCES:
+  TJView:
+    :path: ../
+
+SPEC CHECKSUMS:
+  TJView: 90d235c77b7ff913bb85110c260fb93125ed4f00
+
+COCOAPODS: 0.39.0

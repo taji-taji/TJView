@@ -1,0 +1,6 @@
+framework module Pods_TJView_Example {
+  umbrella header "Pods-TJView_Example-umbrella.h"
+
+  export *
+  module * { export * }
+}
