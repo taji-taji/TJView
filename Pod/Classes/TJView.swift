@@ -16,19 +16,28 @@ public enum TJViewBorderPosition {
 }
 
 @IBDesignable
-class TJView: UIView {
+public class TJView: UIView {
     
-    var topBorder: CALayer = CALayer()
-    var bottomBorder: CALayer = CALayer()
-    var leftBorder: CALayer = CALayer()
-    var rightBorder: CALayer = CALayer()
+    private struct Borders {
+        private struct Properties {
+            private var layer = CALayer()
+            private var width: CGFloat = 0
+            private var color: UIColor?
+        }
+        private var top    = Properties()
+        private var bottom = Properties()
+        private var left   = Properties()
+        private var right  = Properties()
+    }
     
-    override init(frame: CGRect) {
+    private var borders = Borders()
+    
+    public override init(frame: CGRect) {
         super.init(frame: frame)
         addBorderLayer()
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         addBorderLayer()
     }
@@ -36,23 +45,25 @@ class TJView: UIView {
     // - Top Border Properties
 
     @IBInspectable
-    var topBorderWidth: CGFloat {
+    public var topBorderWidth: CGFloat {
         get {
-            return self.topBorderWidth
+            return borders.top.layer.frame.size.height
         }
         set {
-            topBorder.frame = CGRectMake(0.0, 0.0, self.frame.width, newValue)
+            let frame = CGRectMake(0.0, 0.0, self.frame.width, newValue)
+            borders.top.layer.frame = frame
         }
     }
     
     @IBInspectable
-    var topBorderColor: UIColor? {
+    public var topBorderColor: UIColor? {
         get {
-            return self.topBorderColor
+            return borders.top.color
         }
         set {
             if let newValue = newValue {
-                topBorder.backgroundColor = newValue.CGColor
+                borders.top.layer.backgroundColor = newValue.CGColor
+                borders.top.color = newValue
             }
         }
     }
@@ -60,23 +71,25 @@ class TJView: UIView {
     // - Bottom Border Properties
 
     @IBInspectable
-    var bottomBorderWidth: CGFloat {
+    public var bottomBorderWidth: CGFloat {
         get {
-            return self.bottomBorderWidth
+            return borders.bottom.layer.frame.size.height
         }
         set {
-            bottomBorder.frame = CGRectMake(0.0, self.frame.height - newValue, self.frame.width, newValue)
+            let frame = CGRectMake(0.0, self.frame.height - newValue, self.frame.width, newValue)
+            borders.bottom.layer.frame = frame
         }
     }
     
     @IBInspectable
-    var bottomBorderColor: UIColor? {
+    public var bottomBorderColor: UIColor? {
         get {
-            return self.bottomBorderColor
+            return borders.bottom.color
         }
         set {
             if let newValue = newValue {
-                bottomBorder.backgroundColor = newValue.CGColor
+                borders.bottom.layer.backgroundColor = newValue.CGColor
+                borders.bottom.color = newValue
             }
         }
     }
@@ -84,23 +97,25 @@ class TJView: UIView {
     // - Left Border Properties
     
     @IBInspectable
-    var leftBorderWidth: CGFloat {
+    public var leftBorderWidth: CGFloat {
         get {
-            return self.leftBorderWidth
+            return borders.left.layer.frame.size.width
         }
         set {
-            leftBorder.frame = CGRectMake(0.0, 0.0, newValue, self.frame.height)
+            let frame = CGRectMake(0.0, 0.0, newValue, self.frame.height)
+            borders.left.layer.frame = frame
         }
     }
     
     @IBInspectable
-    var leftBorderColor: UIColor? {
+    public var leftBorderColor: UIColor? {
         get {
-            return self.leftBorderColor
+            return borders.left.color
         }
         set {
             if let newValue = newValue {
-                leftBorder.backgroundColor = newValue.CGColor
+                borders.left.layer.backgroundColor = newValue.CGColor
+                borders.left.color = newValue
             }
         }
     }
@@ -108,47 +123,105 @@ class TJView: UIView {
     // - Right Border Properties
     
     @IBInspectable
-    var rightBorderWidth: CGFloat {
+    public var rightBorderWidth: CGFloat {
         get {
-            return self.rightBorderWidth
+            return borders.right.layer.frame.size.width
         }
         set {
-            rightBorder.frame = CGRectMake(self.frame.width - newValue, 0.0, newValue, self.frame.height)
+            let frame = CGRectMake(self.frame.width - newValue, 0.0, newValue, self.frame.height)
+            borders.right.layer.frame = frame
         }
     }
     
     @IBInspectable
-    var rightBorderColor: UIColor? {
+    public var rightBorderColor: UIColor? {
         get {
-            return self.rightBorderColor
+            return borders.right.color
         }
         set {
             if let newValue = newValue {
-                rightBorder.backgroundColor = newValue.CGColor
+                borders.right.layer.backgroundColor = newValue.CGColor
+                borders.right.color = newValue
             }
         }
     }
     
-    private func addBorderLayer() {
-        self.layer.addSublayer(topBorder)
-        self.layer.addSublayer(bottomBorder)
-        self.layer.addSublayer(leftBorder)
-        self.layer.addSublayer(rightBorder)
+    // - Corner Properties
+    
+    @IBInspectable
+    public var cornerRadius: CGFloat = 0 {
+        didSet {
+            self.reLayout()
+        }
     }
     
-    override func layoutSubviews() {
+    @IBInspectable
+    public var cornerRadiusTopLeft: Bool = false {
+        didSet {
+            self.reLayout()
+        }
+    }
+
+    @IBInspectable
+    public var cornerRadiusTopRight: Bool = false {
+        didSet {
+            self.reLayout()
+        }
+    }
+
+    @IBInspectable
+    public var cornerRadiusBottomLeft: Bool = false {
+        didSet {
+            self.reLayout()
+        }
+    }
+
+    @IBInspectable
+    public var cornerRadiusBottomRight: Bool = false {
+        didSet {
+            self.reLayout()
+        }
+    }
+
+    private func addBorderLayer() {
+        self.layer.addSublayer(borders.top.layer)
+        self.layer.addSublayer(borders.bottom.layer)
+        self.layer.addSublayer(borders.left.layer)
+        self.layer.addSublayer(borders.right.layer)
+    }
+    
+    private func reLayout() {
+        self.setNeedsLayout()
+        self.layoutIfNeeded()
+    }
+    
+    override public func layoutSubviews() {
         super.layoutSubviews()
         let selfWidth = self.bounds.size.width
         let selfHeight = self.bounds.size.height
-        topBorder.frame.size.width = selfWidth
-        bottomBorder.frame.size.width = selfWidth
-        leftBorder.frame.size.height = selfHeight
-        rightBorder.frame.size.height = selfHeight
-        rightBorder.frame.origin.x = selfWidth
+        borders.top.layer.frame.size.width = selfWidth
+        borders.bottom.layer.frame.size.width = selfWidth
+        borders.left.layer.frame.size.height = selfHeight
+        borders.right.layer.frame.size.height = selfHeight
+        borders.right.layer.frame.origin.x = selfWidth - borders.right.layer.frame.size.width
+        
+        var corners: UIRectCorner = []
+        if cornerRadiusTopLeft {
+            corners.insert(.TopLeft)
+        }
+        if cornerRadiusTopRight {
+            corners.insert(.TopRight)
+        }
+        if cornerRadiusBottomLeft {
+            corners.insert(.BottomLeft)
+        }
+        if cornerRadiusBottomRight {
+            corners.insert(.BottomRight)
+        }
+        cornerRadiusPositions(corners, cornerWidth: self.cornerRadius)
     }
     
-    func borderPositions(positions: [TJViewBorderPosition], borderWidth: CGFloat, borderColor: UIColor?) {
-        self.layer.sublayers = nil
+    public func borderPositions(positions: [TJViewBorderPosition], borderWidth: CGFloat, borderColor: UIColor?) {
         if positions.contains(.Top) {
             borderTop(borderWidth, borderColor: borderColor)
         }
@@ -163,41 +236,36 @@ class TJView: UIView {
         }
     }
     
-    func borderTop(borderWidth: CGFloat, borderColor: UIColor?) {
+    public func borderTop(borderWidth: CGFloat, borderColor: UIColor?) {
         topBorderWidth = borderWidth
         topBorderColor = borderColor
     }
     
-    func borderBottom(borderWidth: CGFloat, borderColor: UIColor?) {
+    public func borderBottom(borderWidth: CGFloat, borderColor: UIColor?) {
         bottomBorderWidth = borderWidth
         bottomBorderColor = borderColor
     }
 
-    func borderLeft(borderWidth: CGFloat, borderColor: UIColor?) {
+    public func borderLeft(borderWidth: CGFloat, borderColor: UIColor?) {
         leftBorderWidth = borderWidth
         leftBorderColor = borderColor
     }
 
-    func borderRight(borderWidth: CGFloat, borderColor: UIColor?) {
+    public func borderRight(borderWidth: CGFloat, borderColor: UIColor?) {
         rightBorderWidth = borderWidth
         rightBorderColor = borderColor
     }
-//
-//    private func addBorderWithRect(borderLayer: CALayer, borderWidth: CGFloat, borderColor: UIColor?, rect: CGRect) {
-//        let defaultBorderColor = UIColor.whiteColor()
-//        var CGBorderColor: CGColor
-//        
-//        self.layer.masksToBounds = true
-//        
-//        if let _ = borderColor {
-//            CGBorderColor = borderColor!.CGColor
-//        } else {
-//            CGBorderColor = defaultBorderColor.CGColor
-//        }
-//        
-//        borderLayer.frame = rect
-//        borderLayer.backgroundColor = CGBorderColor
-//        self.layer.addSublayer(borderLayer)
-//    }
+    
+    public func cornerRadiusPositions(corners: UIRectCorner, cornerWidth: CGFloat) {
+        let rectShape = CAShapeLayer()
+        rectShape.bounds = self.frame
+        rectShape.position = self.center
+        rectShape.path = UIBezierPath(
+            roundedRect: self.bounds,
+            byRoundingCorners: corners,
+            cornerRadii: CGSize(width: cornerWidth, height: cornerWidth)
+            ).CGPath
+        self.layer.mask = rectShape
+    }
     
 }

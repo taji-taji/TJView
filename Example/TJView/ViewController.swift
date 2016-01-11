@@ -7,12 +7,29 @@
 //
 
 import UIKit
+import TJView
 
 class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+
+        let frame = CGRectMake(10, 200, 200, 100)
+        let subView = TJView(frame: frame)
+        subView.backgroundColor = UIColor.whiteColor()
+        subView.topBorderWidth = 10
+        subView.topBorderColor = UIColor.redColor()
+        subView.cornerRadiusTopRight = true
+        subView.cornerRadius = 5.5
+        
+        self.view.addSubview(subView)
+        
+        let frame2 = CGRectMake(10, 310, 250, 100)
+        let subView2 = TJView(frame: frame2)
+        subView2.backgroundColor = UIColor.whiteColor()
+        subView2.borderPositions([.Top, .Bottom], borderWidth: 3.5, borderColor: UIColor.greenColor())
+        
+        self.view.addSubview(subView2)
     }
 
     override func didReceiveMemoryWarning() {
