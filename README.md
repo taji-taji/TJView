@@ -4,6 +4,8 @@
 [![License](https://img.shields.io/cocoapods/l/TJView.svg?style=flat)](http://cocoapods.org/pods/TJView)
 [![Platform](https://img.shields.io/cocoapods/p/TJView.svg?style=flat)](http://cocoapods.org/pods/TJView)
 
+![demo](https://github.com/taji-taji/TJView/blob/master/images/TJView_demo.gif)
+
 ## Usage
 
 ### Initialize
@@ -61,7 +63,8 @@ public enum TJViewBorderPosition {
 
 #### From Code
 
-```swift:ViewController.swift
+```swift
+// ViewController.swift
 
 import UIKit
 import TJView
