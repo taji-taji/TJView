@@ -4,6 +4,9 @@
 [![License](https://img.shields.io/cocoapods/l/TJView.svg?style=flat)](http://cocoapods.org/pods/TJView)
 [![Platform](https://img.shields.io/cocoapods/p/TJView.svg?style=flat)](http://cocoapods.org/pods/TJView)
 
+This is subclass of UIView.
+You can customize the border of each side individually.(border width, border color and corner radius)
+
 ![demo](https://github.com/taji-taji/TJView/blob/master/images/TJView_demo.gif)
 
 ## Usage
@@ -60,6 +63,8 @@ public enum TJViewBorderPosition {
 ### Example
 
 #### From StoryBoard
+
+![demo](https://github.com/taji-taji/TJView/blob/master/images/TJView_demo.gif)
 
 #### From Code
 
